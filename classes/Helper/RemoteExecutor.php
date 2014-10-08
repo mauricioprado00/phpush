@@ -21,6 +21,23 @@ class Phpush_Helper_RemoteExecutor
     private $_url;
     
     /**
+     * post variables
+     * @var array
+     */
+    private $_vars = array();
+    
+    /**
+     * sets a post variable
+     * @param string $name
+     * @param string $value
+     */
+    public function addPostVariable($name, $value)
+    {
+        $this->_vars[$name] = $value;
+        return $this;
+    }
+    
+    /**
      * queue file to upload
      */
     public function addUploadFile($file)
@@ -69,6 +86,10 @@ class Phpush_Helper_RemoteExecutor
         foreach($this->_uploads as $name => $upload) {
             $post['upload_name_' . $i] = $name;
             $post['upload_content_' . $i++] = $upload;
+        }
+        
+        foreach ($this->_vars as $name => $value) {
+            $post[$name] = $value;
         }
 
         //$file_name_with_full_path = realpath('./sample.jpeg');

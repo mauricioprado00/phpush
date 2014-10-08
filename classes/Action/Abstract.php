@@ -51,6 +51,7 @@ abstract class Phpush_Action_Abstract
     {
         return array(
             'push',
+            'getcommit',
         );
     }
     
@@ -108,8 +109,7 @@ abstract class Phpush_Action_Abstract
         $this->beforeExecute($remoteExecutor);
         $code = <<<CODESET
                 
-        \$action = Phpush_Action_Abstract::getAction("{$this->_action_name}");
-        \$action->remoteExecution();
+        Phpush_Action_Abstract::getAction("{$this->_action_name}")->remoteExecution();
 CODESET;
         
         $remoteExecutor->exec($code);

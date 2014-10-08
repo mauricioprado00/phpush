@@ -1,6 +1,5 @@
 #!/usr/bin/php
 <?php
-#./phpush.php -p"si podes ejecutar esto tranquilo" -h"http://localhost/testssync/gs.php" -apush --push-file="/tmp/commit.tgz"
 
 include __DIR__ . '/autoload.php';
 
