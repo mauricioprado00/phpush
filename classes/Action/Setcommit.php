@@ -1,13 +1,14 @@
 <?php
 
-#./phpush.php -p"si podes ejecutar esto tranquilo" -h"http://localhost/testssync/gs.php" -agetcommit --last-commit-file=last_commit
-class Phpush_Action_Getcommit extends Phpush_Action_Abstract
+#./phpush.php -p"si podes ejecutar esto tranquilo" -h"http://localhost/testssync/gs.php" -asetcommit --last-commit-file=last_commit
+class Phpush_Action_Setcommit extends Phpush_Action_Abstract
 {
     private function _getArgs()
     {
         $short = '';
         $long = array(
-            'last-commit-file:'
+            'last-commit-file:',
+            'commit:',
         );
 
         return getopt($short, $long);
@@ -23,6 +24,9 @@ class Phpush_Action_Getcommit extends Phpush_Action_Abstract
         if (!isset($args['last-commit-file'])) {
             $errors[] = "you must specify the last commit filename";
         }
+        if (!isset($args['commit'])) {
+            $errors[] = "you must specify the commit id to set";
+        }
         
         return $errors;
     }
@@ -33,7 +37,7 @@ class Phpush_Action_Getcommit extends Phpush_Action_Abstract
      */
     public function getActionUsage()
     {
-        return '[last-commit-file=last_commit]';
+        return '[last-commit-file=last_commit] [commit=A98D3E3F32F]';
     }
 
     /**
@@ -43,7 +47,10 @@ class Phpush_Action_Getcommit extends Phpush_Action_Abstract
     public function beforeExecute($remoteExecutor) 
     {
         $args = $this->_getArgs();
-        $remoteExecutor->addPostVariable('last_commit_file', $args['last-commit-file']);
+        $remoteExecutor
+            ->addPostVariable('last_commit_file', $args['last-commit-file'])
+            ->addPostVariable('commit', $args['commit'])
+        ;
     }
     
     /**
@@ -52,10 +59,6 @@ class Phpush_Action_Getcommit extends Phpush_Action_Abstract
      */
     public function _remoteExecution()
     {
-        if (file_exists($_POST['last_commit_file'])) {
-            return file_get_contents($_POST['last_commit_file']);
-        }
-        
-        return false;
+        return file_put_contents($_POST['last_commit_file'], $_POST['commit']) > 0;
     }
 }

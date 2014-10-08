@@ -48,9 +48,9 @@ if (count($errors)) {
     die();
 }
 
-$action->run();
+echo $action->run($result) . PHP_EOL;
 
-echo PHP_EOL;
+return $result;
 
 die();
 

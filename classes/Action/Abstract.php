@@ -52,6 +52,7 @@ abstract class Phpush_Action_Abstract
         return array(
             'push',
             'getcommit',
+            'setcommit',
         );
     }
     
@@ -103,7 +104,7 @@ abstract class Phpush_Action_Abstract
     /**
      * runs the action
      */
-    public function run()
+    public function run(&$result)
     {
         $remoteExecutor = $this->getRemoteExecutor();
         $this->beforeExecute($remoteExecutor);
@@ -112,7 +113,14 @@ abstract class Phpush_Action_Abstract
         Phpush_Action_Abstract::getAction("{$this->_action_name}")->remoteExecution();
 CODESET;
         
-        $remoteExecutor->exec($code);
+        $output = $remoteExecutor->exec($code);
+        
+        if (strpos($output, 'phpush_ko')) {
+            $result = false;
+        } else {
+            $result = true;
+        }
+        return $output;
     }
     
     /**
